@@ -1,3 +1,0 @@
-C:/programming/cpp/Isometric/cmake-build-debug/CMakeFiles/Isometric.dir
-C:/programming/cpp/Isometric/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/programming/cpp/Isometric/cmake-build-debug/CMakeFiles/rebuild_cache.dir
