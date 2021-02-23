@@ -45,6 +45,15 @@ void WorldChunk::addTileVertices(int start_x, int end_x, int start_z, int end_z,
                 if (z == 16)
                     z = 15;
                 WorldTile& tile = tiles[x + z*16 + y*256];
+
+                if (side == north) {
+                    TileIndices ti;
+                    ti.render_indices = vertices[side][0].size();
+                    ti.tile_data_indices = vertices[side][1].size();
+                    ti.chunk_data_indices = vertices[side][2].size();
+                    tile_indices.push_back(ti);
+                }
+
                 if (tile.type != -1) {
                     float converted_tile_x = tile.pos_x;
                     float converted_tile_z = tile.pos_z;
@@ -66,14 +75,6 @@ void WorldChunk::addTileVertices(int start_x, int end_x, int start_z, int end_z,
 
                     float new_pos_x = (converted_tile_x - converted_tile_z) * tile_size / 2.0f + (16 * tile_size / 2.0f) + offset_x;
                     float new_pos_y = (converted_tile_x + converted_tile_z) * tile_size / 4.0f - tile.pos_y * tile_size / 2.0f + (16 * tile_size / 2.0f) + offset_z;
-
-                    if (side == north) {
-                        TileIndices ti;
-                        ti.render_indices = vertices[side][0].size();
-                        ti.tile_data_indices = vertices[side][1].size();
-                        ti.chunk_data_indices = vertices[side][2].size();
-                        tile_indices.insert(std::make_pair(x + z*16 + y*256, ti));
-                    }
 
                     sf::Vector2f topMid = sf::Vector2f(new_pos_x + tile_size/2.0f, new_pos_y);
                     sf::Vector2f topRight = sf::Vector2f(new_pos_x + tile_size, new_pos_y + tile_size/4.0f);

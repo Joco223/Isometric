@@ -11,7 +11,7 @@
 
 const int width = 1024;
 const int height = 576;
-const int chunk_width = 1;
+const int chunk_width = 3;
 const int fps = 60;
 const int chunk_size = 16;
 
@@ -139,29 +139,10 @@ int main() {
                             scale--;
                         }
                         break;
-                    case sf::Keyboard::Z: {
+                    case sf::Keyboard::Z:
                         side++;
                         side = side % 4;
-
-                        prev_offset_x = camera.getCenter().x - width/2;
-                        prev_offset_y = camera.getCenter().y - height/2;
-
-                        /*switch (side) {
-                            case north:
-                                camera.setCenter(-camera.getCenter().x, camera.getCenter().y);
-                                break;
-                            case east:
-                                camera.setCenter(camera.getCenter().x, -camera.getCenter().y);
-                                break;
-                            case south:
-                                camera.setCenter(-camera.getCenter().x, camera.getCenter().y);
-                                break;
-                            case west:
-                                camera.setCenter(camera.getCenter().x, -camera.getCenter().y);
-                                break;
-                        }*/
-
-                        break; }
+                        break;
                     case sf::Keyboard::C:
                         side--;
                         if (side == -1)
@@ -322,7 +303,7 @@ int main() {
         if (right)
             camera.move(10 * scale, 0);
 
-        Rendering::renderVertexChunks(window, chunks, camera, side, chunk_width, prev_offset_x, prev_offset_y);
+        Rendering::renderVertexChunks(window, chunks, camera, side, chunk_width);
 
         //Rendering::debugRender(window);
 

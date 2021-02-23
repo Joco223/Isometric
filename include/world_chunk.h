@@ -31,7 +31,7 @@ public:
     std::vector<WorldTile> tiles;
     std::vector<std::vector<std::vector<sf::Vertex>>> vertices;
 
-    std::unordered_map<int, TileIndices> tile_indices;
+    std::vector<TileIndices> tile_indices;
 
     sf::Sprite chunk_sprite;
 

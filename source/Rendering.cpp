@@ -34,7 +34,7 @@ namespace Rendering {
         return sprites.size() -1;
     }
 
-    void renderVertexChunks(sf::RenderWindow& window, const std::vector<WorldChunk>& chunks, const sf::View& camera, int side, int chunk_width, int prev_offset_x, int prev_offset_y) {
+    void renderVertexChunks(sf::RenderWindow& window, const std::vector<WorldChunk>& chunks, sf::View& camera, int side, int chunk_width) {
         tileMap.clear();
         tileMapChunk.clear();
         for (int x = 0; x < chunk_width; x++) {
@@ -59,7 +59,7 @@ namespace Rendering {
                 int offset_z = (x + z) * 16 * tile_size / 4.0f;
 
                 sf::Transform offset;
-                offset.translate(offset_x - camera.getCenter().x, offset_z - camera.getCenter().y);
+                offset.translate(offset_x, offset_z);
                 sf::RenderStates states;
                 states.transform = offset;
                 states.texture = &textureAtlas;
