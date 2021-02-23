@@ -11,7 +11,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(CMAKE_CXX_STANDARD 20)
 set(SFML_DIR ../Libraries/SFML-2.5.1/lib/cmake/SFML)
-set(SFML_STATIC_LIBRARIES TRUE)
+
 
 include_directories(include)
 

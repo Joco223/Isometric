@@ -6,7 +6,7 @@ public:
     int pos_x, pos_y, pos_z;
     int sprite_index;
     bool visible, selected, top;
-    int type;
+    int type = -1;
 
     WorldTile() {
       type = -1;
