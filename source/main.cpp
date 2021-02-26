@@ -9,8 +9,8 @@
 #include "world_chunk.h"
 #include "SimplexNoise.h"
 
-const int width = 1024;
-const int height = 576;
+const int width = 1920;
+const int height = 1080;
 const int chunk_width = 3;
 const int fps = 60;
 const int chunk_size = 16;
@@ -49,11 +49,13 @@ int main() {
                     WorldTile newTile;
                     for (int y = 0; y < 16 + top; y++) {
                         if (y == 15 + top) {
-                            newTile = WorldTile(x, y, z, grass_sprite, true, false, true, 0);
+                            newTile = WorldTile(x, y, z, grass_sprite, true, false, true, false, 0);
+                            //if (y < 26)
+                                //newTile.type = 1;
                         }else if (y > 12 + top) {
-                            newTile = WorldTile(x, y, z, dirt_sprite, false, false, false, 1);
+                            newTile = WorldTile(x, y, z, dirt_sprite, false, false, false, false, 1);
                         }else {
-                            newTile = WorldTile(x, y, z, stone_sprite, false, false, false, 2);
+                            newTile = WorldTile(x, y, z, stone_sprite, false, false, false, false, 2);
                         }
 
                         newTile.visible = true;
@@ -63,31 +65,27 @@ int main() {
 
                         new_chunk.tiles[x + z*16 + y*16*16] = newTile;
                     }
+
+                    /*for (int y = 16 + top; y < 27; y++) {
+                        newTile = WorldTile(x, y, z, 4, true, false, false, true, 3);
+                        newTile.visible = true;
+                        if (y == 26)
+                            newTile.top = true;
+
+                        new_chunk.tiles[x + z*16 + y*16*16] = newTile;
+                    }
+
+                    if (new_chunk.top < 27)
+                        new_chunk.top = 27;*/
                 }
             }
-            new_chunk.vertices.resize(4);
-            new_chunk.vertices[0].resize(3);
-            new_chunk.vertices[1].resize(3);
-            new_chunk.vertices[2].resize(3);
-            new_chunk.vertices[3].resize(3);
             chunks.push_back(new_chunk);
         }
     }
 
     for (int cy = 0; cy < chunk_width; cy++) {
         for (int cx = 0; cx < chunk_width; cx++) {
-            WorldChunk* next_x = nullptr;
-            WorldChunk* next_z = nullptr;
-
-            if (cx != chunk_width-1) {
-                next_x = &chunks[(cx + 1) + cy*chunk_width];
-            }
-
-            if (cy != chunk_width-1) {
-                next_z = &chunks[cx + (cy+1)*chunk_width];
-            }
-
-            chunks[cx + cy*chunk_width].generateVertexGrid(next_x, next_z);
+            chunks[cx + cy*chunk_width].generateVertexMesh(cx, cy, chunk_width, chunks);
         }
     }
 
@@ -170,7 +168,8 @@ int main() {
                         break;
                 }
             }else if (event.type == sf::Event::MouseButtonPressed) {
-                int chunk_x = 0;
+                //todo rework mouse interaction
+                /*int chunk_x = 0;
                 int chunk_y = 0;
                 int chunk_z = 0;
                 int tile_x = 0;
@@ -186,6 +185,7 @@ int main() {
 
                 if (event.mouseButton.button == sf::Mouse::Left) {
                     chunks[chunk_index].tiles[tile_index].type = -1;
+                    chunks[chunk_index].tiles[tile_index].transparent = false;
                 }else{
                     WorldTile new_tile;
                     new_tile.pos_x = tile_x;
@@ -273,19 +273,7 @@ int main() {
                     }
                 }
 
-
-                WorldChunk* next_x = nullptr;
-                WorldChunk* next_z = nullptr;
-
-                if (chunk_x != chunk_width-1) {
-                    next_x = &chunks[(chunk_x + 1) + chunk_z*chunk_width];
-                }
-
-                if (chunk_z != chunk_width-1) {
-                    next_z = &chunks[chunk_x + (chunk_z + 1)*chunk_width];
-                }
-
-                chunks[chunk_index].generateVertexGrid(nullptr, nullptr);
+                //chunks[chunk_index].generateVertexGrid(chunk_x, chunk_z, chunk_width, chunks);*/
             }else if (event.type == sf::Event::MouseButtonReleased) {
                 left_mouse = false;
             }

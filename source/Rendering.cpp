@@ -11,8 +11,8 @@ namespace Rendering {
     std::vector<sf::RenderTexture*> chunk_textures;
     std::vector<gameSprite> sprites;
     const int tile_size = 64;
-    const int width = 1024;
-    const int height = 576;
+    const int width = 1920;
+    const int height = 1080;
 
     sf::Sprite tileMapChunkSprite;
     sf::Texture textureAtlas;
@@ -34,45 +34,50 @@ namespace Rendering {
         return sprites.size() -1;
     }
 
+    void rotateMatrix(int x, int y, int rotate_count, int& new_x, int& new_y, int matrix_size) {
+        int tmp_x = x;
+        int tmp_y = y;
+
+        for (int i = 0; i < rotate_count; i++) {
+            int old_x = tmp_x;
+            tmp_x = matrix_size - 1 - tmp_y;
+            tmp_y = old_x;
+        }
+
+        new_x = tmp_x;
+        new_y = tmp_y;
+    }
+
+
     void renderVertexChunks(sf::RenderWindow& window, const std::vector<WorldChunk>& chunks, sf::View& camera, int side, int chunk_width) {
         tileMap.clear();
         tileMapChunk.clear();
+
         for (int x = 0; x < chunk_width; x++) {
             for (int z = 0; z < chunk_width; z++) {
-                int corrected_x = x;
-                int corrected_z = z;
-
-                switch (side) {
-                    case east:
-                        corrected_z = (chunk_width - 1) - z;
-                        break;
-                    case south:
-                        corrected_z = (chunk_width - 1) - z;
-                        corrected_x = (chunk_width - 1) - x;
-                        break;
-                    case west:
-                        corrected_x = (chunk_width - 1) - x;
-                        break;
-                }
-
                 int offset_x = (x - z) * 16 * tile_size / 2.0f;
-                int offset_z = (x + z) * 16 * tile_size / 4.0f;
+                int offset_y = (x + z) * 16 * tile_size / 4.0f;
 
                 sf::Transform offset;
-                offset.translate(offset_x, offset_z);
+                offset.translate(offset_x, offset_y);
                 sf::RenderStates states;
                 states.transform = offset;
                 states.texture = &textureAtlas;
 
-                const WorldChunk& chunk = chunks[corrected_x + corrected_z*chunk_width];
+                int rotated_x = 0;
+                int rotated_z = 0;
+
+                rotateMatrix(x, z, side, rotated_x, rotated_z, chunk_width);
+
+                const WorldChunk& chunk = chunks[rotated_x + rotated_z*chunk_width];
                 window.draw(chunk.vertices[side][0].data(), chunk.vertices[side][0].size(), sf::Quads, states);
-                states.texture = nullptr;
                 tileMap.setView(camera);
                 tileMap.draw(chunk.vertices[side][1].data(), chunk.vertices[side][1].size(), sf::Quads, states);
                 tileMapChunk.setView(camera);
                 tileMapChunk.draw(chunk.vertices[side][2].data(), chunk.vertices[side][2].size(), sf::Quads, states);
             }
         }
+
         tileMap.display();
         tileMapChunk.display();
     }
